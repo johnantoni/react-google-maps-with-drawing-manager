@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getThemeAttribute } from './../../helpers';
 import { setParentState } from './../../helpers';
+import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardBody, CardTitle, CardText } from 'reactstrap';
 const _ = require("lodash");
 const { compose, withProps, lifecycle } = require("recompose");
 const { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon } = require("react-google-maps");
@@ -9,7 +10,8 @@ const { DrawingManager } = require("react-google-maps/lib/components/drawing/Dra
 
 const MapWithDrawingManager = compose(
   withProps({
-    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=[apikey]&libraries=geometry,drawing,places",
+    drawingMode: false,
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=[apikey]&v=3&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `400px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
@@ -26,6 +28,16 @@ const MapWithDrawingManager = compose(
           lat: 43.6426, lng: -79.3871
         },
         markers: [],
+        switchToDrawMode: () => {
+          this.setState({
+            drawingMode: true
+          })
+        },
+        switchToViewMode: () => {
+          this.setState({
+            drawingMode: false
+          })
+        },
         onMapMounted: ref => {
           refs.map = ref;
         },
@@ -45,18 +57,19 @@ const MapWithDrawingManager = compose(
           console.log(ref)
         },
         onMarkerComplete: ref => {
-          let markers = props.myMarkers
-          let marker = { title: '', lat: 0, lng: 0 }
-
-          marker.title = `New Marker ${markers.length + 1}`
-          marker.lat = ref.overlay.position.lat()
-          marker.lng = ref.overlay.position.lng()
-
-          markers.push(marker)
-
-          props.setParentState({
-            myMarkers: markers
-          })
+          console.log(this.state.drawingMode)
+          // let markers = props.myMarkers
+          // let marker = { title: '', lat: 0, lng: 0 }
+          //
+          // marker.title = `New Marker ${markers.length + 1}`
+          // marker.lat = ref.overlay.position.lat()
+          // marker.lng = ref.overlay.position.lng()
+          //
+          // markers.push(marker)
+          //
+          // props.setParentState({
+          //   myMarkers: markers
+          // })
         },
         onPolylineComplete: ref => {
           console.log(ref)
@@ -123,14 +136,19 @@ const MapWithDrawingManager = compose(
       />
     </SearchBox>
     <DrawingManager
+      options={{
+        drawingControl: props.drawingMode
+      }}
       onPolygonComplete={props.onPolygonComplete}
       onCircleComplete={props.onCircleComplete}
       onMarkerComplete={props.onMarkerComplete}
       onPolylineComplete={props.onPolylineComplete}
       onRectangleComplete={props.onRectangleComplete}
-      defaultDrawingMode={google.maps.drawing.OverlayType.MARKER}
+      drawingMode={props.drawingMode
+            ? window.google.maps.drawing.OverlayType.MARKER
+            : null}
+      // defaultDrawingMode={google.maps.drawing.OverlayType.MARKER}
       defaultOptions={{
-        drawingControl: true,
         drawingControlOptions: {
           position: google.maps.ControlPosition.TOP_LEFT,
           drawingModes: [
@@ -141,16 +159,13 @@ const MapWithDrawingManager = compose(
             google.maps.drawing.OverlayType.RECTANGLE,
           ],
         },
-        circleOptions: {
-          fillColor: `#ffff00`,
-          fillOpacity: 1,
-          strokeWeight: 5,
-          clickable: false,
-          editable: true,
-          zIndex: 1,
-        },
       }}
     />
+    <Button
+      onClick={props.drawingMode ? props.switchToViewMode : props.switchToDrawMode}
+      >
+      {props.drawingMode ? 'Cancel' : 'Draw'}
+    </Button>
     <Polygon path={props.polyCoords} onClick={event => props.clickMe(event)} />
   </GoogleMap>
 );
