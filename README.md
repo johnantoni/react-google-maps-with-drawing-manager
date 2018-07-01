@@ -13,3 +13,5 @@ Google Maps Note Links:
 * medium article https://medium.com/front-end-hacking/simplified-google-maps-api-in-a-react-app-46981441d2c9
 * medium source https://github.com/mthorry/simple-react-maps/tree/master/src
 * limit to 1 annotation / polygon https://stackoverflow.com/questions/14166546/google-maps-drawing-manager-limit-to-1-polygon
+
+* https://github.com/tomchentw/react-google-maps/blob/master/src/components/places/SearchBox.md
