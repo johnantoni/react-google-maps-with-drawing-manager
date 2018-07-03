@@ -15,3 +15,5 @@ Google Maps Note Links:
 * limit to 1 annotation / polygon https://stackoverflow.com/questions/14166546/google-maps-drawing-manager-limit-to-1-polygon
 
 * https://github.com/tomchentw/react-google-maps/blob/master/src/components/places/SearchBox.md
+
+* https://gist.github.com/johnantoni/d68a2f71ef05c133867927f3992ec56e
